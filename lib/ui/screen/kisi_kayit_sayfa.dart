@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kisiler_uygulamasi/ui/cubit/kisi_kayit_cubit.dart';
 
 class KisiKayitSayfa extends StatefulWidget {
   const KisiKayitSayfa({Key? key}) : super(key: key);
@@ -11,9 +13,6 @@ class _KisiKayitSayfaState extends State<KisiKayitSayfa> {
   var tfKisiAd = TextEditingController();
   var tfKisiTel = TextEditingController();
 
-  Future<void> kaydet(String kisi_ad, String kisi_tel)async{
-    print("Kişi kayıt : $kisi_ad - $kisi_tel");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _KisiKayitSayfaState extends State<KisiKayitSayfa> {
                 decoration: const InputDecoration(hintText: "Kisi Tel:"),
               ),
               ElevatedButton(onPressed: (){
-                kaydet(tfKisiAd.text, tfKisiTel.text);
+                context.read<KisiKayitCubit>().kaydet(tfKisiAd.text, tfKisiTel.text);
               },
                 child: Text("Kaydet"),
               ),
