@@ -34,8 +34,8 @@ class _AnasayfaState extends State<Anasayfa> {
           IconButton(onPressed: (){
             setState(() {
               aramaYapiliyorMu = false;
-              context.read<AnasayfaCubit>().KisileriYukle();
             });
+            context.read<AnasayfaCubit>().KisileriYukle();
           },
               icon: const Icon(Icons.clear),
           ) :
@@ -58,7 +58,8 @@ class _AnasayfaState extends State<Anasayfa> {
                 var kisi = kisilerListesi[indeks];
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>KisiDetaySayfa(kisi: kisi)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>KisiDetaySayfa(kisi: kisi)))
+                        .then((value) { context.read<AnasayfaCubit>().KisileriYukle();});
                   },
                   child: Card(
                     child: Row(
