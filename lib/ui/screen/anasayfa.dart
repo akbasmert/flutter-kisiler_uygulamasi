@@ -6,7 +6,7 @@ import 'package:kisiler_uygulamasi/ui/screen/kisi_detay_sayfa.dart';
 import 'package:kisiler_uygulamasi/ui/screen/kisi_kayit_sayfa.dart';
 class Anasayfa extends StatefulWidget {
   const Anasayfa({Key? key}) : super(key: key);
-
+//tamam
   @override
   State<Anasayfa> createState() => _AnasayfaState();
 }
