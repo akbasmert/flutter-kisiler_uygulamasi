@@ -4,107 +4,95 @@ import 'package:kisiler_uygulamasi/data/entity/kisiler.dart';
 import 'package:kisiler_uygulamasi/ui/cubit/anasayfa_cubit.dart';
 import 'package:kisiler_uygulamasi/ui/screen/kisi_detay_sayfa.dart';
 import 'package:kisiler_uygulamasi/ui/screen/kisi_kayit_sayfa.dart';
-class Anasayfa extends StatefulWidget {
-  const Anasayfa({Key? key}) : super(key: key);
-//tamam
+import 'package:kisiler_uygulamasi/data/entity/kisiler.dart';
+
+class Anasafya extends StatefulWidget {
+  const Anasafya({Key? key}) : super(key: key);
+
   @override
-  State<Anasayfa> createState() => _AnasayfaState();
+  State<Anasafya> createState() => _AnasafyaState();
 }
 
-class _AnasayfaState extends State<Anasayfa> {
+class _AnasafyaState extends State<Anasafya> {
   bool aramaYapiliyorMu = false;
+
   @override
   void initState() {
     super.initState();
-    context.read<AnasayfaCubit>().KisileriYukle();
+    context.read<AnasayfaCubit>().kisileriYukle();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: aramaYapiliyorMu ?
-        TextField(decoration: InputDecoration(hintText:  "Ara"),
-        onChanged: (aramaSonucu){
-        context.read<AnasayfaCubit>().ara(aramaSonucu);
-        },
-        ) :
-        Text("Kişiler"),
+        TextField(decoration: const InputDecoration(hintText: "Ara"),onChanged: (aramaSonucu){
+          context.read<AnasayfaCubit>().ara(aramaSonucu);
+        },) :
+        const Text("Kişiler"),
         actions: [
           aramaYapiliyorMu ?
           IconButton(onPressed: (){
-            setState(() {
-              aramaYapiliyorMu = false;
-            });
-            context.read<AnasayfaCubit>().KisileriYukle();
-          },
-              icon: const Icon(Icons.clear),
-          ) :
+            setState(() {aramaYapiliyorMu = false;});
+            context.read<AnasayfaCubit>().kisileriYukle();
+          }, icon: const Icon(Icons.clear)) :
           IconButton(onPressed: (){
-            setState(() {
-              aramaYapiliyorMu = true;
-            });
-          },
-            icon: const Icon(Icons.search),
-          ) ,
+            setState(() {aramaYapiliyorMu = true;});
+          }, icon: const Icon(Icons.search)),
         ],
       ),
       body: BlocBuilder<AnasayfaCubit,List<Kisiler>>(
-
-        builder: (context, kisilerListesi){
+        builder: (context,kisilerListesi){
           if(kisilerListesi.isNotEmpty){
             return ListView.builder(
-              itemCount: kisilerListesi.length,
-              itemBuilder:  (context,indeks){
+              itemCount: kisilerListesi.length,//3
+              itemBuilder: (context,indeks){//0,1,2
                 var kisi = kisilerListesi[indeks];
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>KisiDetaySayfa(kisi: kisi)))
-                        .then((value) { context.read<AnasayfaCubit>().KisileriYukle();});
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => KisiDetaySayfa(kisi: kisi)));
                   },
                   child: Card(
                     child: Row(
                       children: [
-                        Text("${kisi.kisi_ad} - ${kisi.kisi_tel}"),
-                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("${kisi.kisi_ad} - ${kisi.kisi_tel}"),
+                        ),
+                        const Spacer(),
                         IconButton(onPressed: (){
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content:
-                            Text("${kisi.kisi_ad} silinsinmi?"),
+                            SnackBar(
+                              content: Text("${kisi.kisi_ad} silinsin mi?"),
                               action: SnackBarAction(
                                 label: "Evet",
                                 onPressed: (){
-                                  context.read<AnasayfaCubit>().sil(kisi.kisi_id)
-                                      .then((value){
-                                        context.read<AnasayfaCubit>().KisileriYukle();
-                                  });
-
+                                  context.read<AnasayfaCubit>().sil(int.parse(kisi.kisi_id));
                                 },
                               ),
-                            )
+                            ),
                           );
-                        }, icon: Icon(Icons.delete_forever_outlined, color: Colors.black54,),
-                        ),
+                        }, icon: const Icon(Icons.delete_outline,color: Colors.black54,)),
                       ],
                     ),
                   ),
                 );
               },
             );
-          }else{//asfasf
+          }else{
             return const Center();
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder:(context) => KisiKayitSayfa() ))
-                .then((value){
-                  context.read<AnasayfaCubit>().KisileriYukle();
-            });
-
-          },
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const KisiKayitSayfa()));
+        },
         child: const Icon(Icons.add),
       ),
     );
   }
 }
+
+

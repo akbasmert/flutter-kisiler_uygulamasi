@@ -1,52 +1,35 @@
 import 'package:kisiler_uygulamasi/data/entity/kisiler.dart';
-import 'package:kisiler_uygulamasi/data/sqlite/veritabani.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:kisiler_uygulamasi/data/entity/kisiler_cevap.dart';
 
-class KisilerDaoRepo{
-  Future<void> kaydet(String kisi_ad, String kisi_tel)async{
-   var db = await Veritabani.veritabaniErisim();
-   var bilgiler = Map<String,dynamic>();
-   bilgiler["kisi_ad"] = kisi_ad;
-   bilgiler["kisi_tel"] = kisi_tel;
-
-   await db.insert("kisiler", bilgiler);
-
+class KisilerDaoRepository {
+  List<Kisiler> parseKisilerCevap(String cevap){
+    return KisilerCevap.fromJson(json.decode(cevap)).kisiler;
   }
 
-  Future<void> guncelle(int kisi_id, String kisi_ad, String kisi_tel)async{
-
-    var db = await Veritabani.veritabaniErisim();
-
-    var bilgiler = Map<String,dynamic>();
-    bilgiler["kisi_ad"] = kisi_ad;
-    bilgiler["kisi_tel"] = kisi_tel;
-
-    await db.update("kisiler", bilgiler, where: "kisi_id=?",whereArgs: [kisi_id]);
-
+  Future<void> kaydet(String kisi_ad,String kisi_tel) async {
+    print("Kişi Kaydet : $kisi_ad - $kisi_tel");
   }
 
-  Future<List<Kisiler>> KisileriYukle()async{
-   var db = await Veritabani.veritabaniErisim();
-   List<Map<String,dynamic>> maps = await db.rawQuery("SElECT * FROM kisiler"); //dynamic bütün türleri kapsoyor
-
-    return List.generate(maps.length, (i) {
-      var satir = maps[i];
-      return Kisiler(kisi_id: satir["kisi_id"], kisi_ad: satir["kisi_ad"], kisi_tel: satir["kisi_tel"]);
-
-    });
+  Future<void> guncelle(int kisi_id,String kisi_ad,String kisi_tel) async {
+    print("Kişi Güncelle : $kisi_id - $kisi_ad - $kisi_tel");
   }
 
-  Future<List<Kisiler>> ara(String aramaKelimesi)async{
-    var db = await Veritabani.veritabaniErisim();
-    List<Map<String,dynamic>> maps = await db.rawQuery("SELECT * FROM kisiler Where kisi_ad like '%$aramaKelimesi'");
-    return List.generate(maps.length, (i) {
-      var satir = maps[i];
-     return  Kisiler(kisi_id: satir["kisi_id"], kisi_ad: satir["kisi_ad"], kisi_tel: satir["kisi_tel"]);
-    });
-  }
-  Future<void>sil(int kisi_id)async{
-   var db = await Veritabani.veritabaniErisim();
-   await db.delete("kisiler", where: "kisi_id=?",whereArgs: [kisi_id]);
+  Future<List<Kisiler>> kisileriYukle() async {
+    var url = Uri.parse("http://kasimadalan.pe.hu/kisiler/tum_kisiler.php");
+    var cevap = await http.get(url);
+    return parseKisilerCevap(cevap.body);
   }
 
-  // Veri tabanı ile ilgili işlemleri burada yapacağız
+  Future<List<Kisiler>> ara(String aramaKelimesi) async {
+    var kisilerListesi = <Kisiler>[];
+    var k1 = Kisiler(kisi_id: "1", kisi_ad: "Ahmet", kisi_tel: "1111");
+    kisilerListesi.add(k1);
+    return kisilerListesi;
+  }
+
+  Future<void> sil(int kisi_id) async {
+    print("Kişi Sil : $kisi_id");
+  }
 }

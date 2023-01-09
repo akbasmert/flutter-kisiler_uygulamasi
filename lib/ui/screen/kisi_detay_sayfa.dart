@@ -4,8 +4,8 @@ import 'package:kisiler_uygulamasi/data/entity/kisiler.dart';
 import 'package:kisiler_uygulamasi/ui/cubit/kisi_detay_cubit.dart';
 
 class KisiDetaySayfa extends StatefulWidget {
-Kisiler kisi;
-KisiDetaySayfa({required this.kisi});
+  Kisiler kisi;
+  KisiDetaySayfa({required this.kisi});
 
   @override
   State<KisiDetaySayfa> createState() => _KisiDetaySayfaState();
@@ -14,6 +14,7 @@ KisiDetaySayfa({required this.kisi});
 class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
   var tfKisiAd = TextEditingController();
   var tfKisiTel = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -22,35 +23,24 @@ class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
     tfKisiTel.text = kisi.kisi_tel;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Kişi Detay"),),
+      appBar: AppBar(title: const Text("Kişi Detay"),),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 50.0, right: 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          padding: const EdgeInsets.only(left: 50,right: 50),
+          child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextField(
-                controller: tfKisiAd,
-                decoration: const InputDecoration(hintText: "Kisi Ad:"),
-              ),
-              TextField(
-                controller: tfKisiTel,
-                decoration: const InputDecoration(hintText: "Kisi Tel:"),
-              )
-              , ElevatedButton(onPressed: (){
-                 context.read<KisiDetayCubit>().guncelle(widget.kisi.kisi_id, tfKisiAd.text, tfKisiTel.text);
-              },
-                child: Text("Guncelle"),
-              ),
+              TextField(controller: tfKisiAd,decoration: const InputDecoration(hintText: "Kişi Ad"),),
+              TextField(controller: tfKisiTel,decoration: const InputDecoration(hintText: "Kişi Tel"),),
+              ElevatedButton(onPressed: (){
+                context.read<KisiDetayCubit>().guncelle(int.parse(widget.kisi.kisi_id), tfKisiAd.text, tfKisiTel.text);
+              }, child: const Text("GÜNCELLE")),
             ],
           ),
         ),
       ),
-
     );
   }
 }
