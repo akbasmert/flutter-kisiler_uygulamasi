@@ -51,7 +51,9 @@ class _AnasafyaState extends State<Anasafya> {
                 var kisi = kisilerListesi[indeks];
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => KisiDetaySayfa(kisi: kisi)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => KisiDetaySayfa(kisi: kisi)))
+                        .then((value) {    context.read<AnasayfaCubit>().kisileriYukle();
+                    });
                   },
                   child: Card(
                     child: Row(
@@ -87,7 +89,9 @@ class _AnasafyaState extends State<Anasafya> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const KisiKayitSayfa()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const KisiKayitSayfa()))
+          .then((value) {    context.read<AnasayfaCubit>().kisileriYukle();
+          });
         },
         child: const Icon(Icons.add),
       ),
